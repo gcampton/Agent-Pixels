@@ -1,0 +1,13 @@
+{
+  "id": "POOL_TABLE",
+  "name": "Pool Table",
+  "category": "desks",
+  "type": "asset",
+  "canPlaceOnWalls": false,
+  "canPlaceOnSurfaces": false,
+  "backgroundTiles": 0,
+  "width": 80,
+  "height": 48,
+  "footprintW": 5,
+  "footprintH": 3
+}
