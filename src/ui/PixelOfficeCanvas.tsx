@@ -10,6 +10,7 @@ export type CameraAgent = {
   name: string;
   status?: string | null;
   activityKind?: "coding" | "research" | "writing" | "meeting" | "idle";
+  characterIndex?: number;
 };
 
 type PixelOfficeCanvasProps = {
@@ -65,11 +66,17 @@ export function PixelOfficeCanvas({ agents, camera }: PixelOfficeCanvasProps) {
     const incoming = new Set(agents.map((agent) => stableNumericId(agent.id)));
     for (const agent of agents) {
       const id = stableNumericId(agent.id);
-      office.addAgent(id, undefined, undefined, undefined, true);
+      office.addAgent(id, agent.characterIndex, 0, undefined, true);
+      const character = office.characters.get(id);
+      if (character && agent.characterIndex !== undefined) {
+        if (character.palette !== agent.characterIndex) character.palette = agent.characterIndex;
+        if (character.hueShift !== 0) character.hueShift = 0;
+      }
       const activity = agent.activityKind ?? "idle";
       const isWorking = activity !== "idle";
-      office.setAgentActive(id, isWorking);
-      office.setAgentTool(id, activity === "research" ? "Read" : isWorking ? "Edit" : null);
+      if (character && character.isActive !== isWorking) office.setAgentActive(id, isWorking);
+      const nextTool = activity === "research" ? "Read" : isWorking ? "Edit" : null;
+      if (character && character.currentTool !== nextTool) office.setAgentTool(id, nextTool);
     }
     for (const id of office.characters.keys()) {
       if (!incoming.has(id)) office.removeAgent(id);

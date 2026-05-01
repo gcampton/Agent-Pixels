@@ -7,11 +7,13 @@ export const PAGE_ROUTE = "agent-pixels";
 export const SLOT_IDS = {
   sidebar: "agent-pixels-sidebar",
   page: "agent-pixels-camera-page",
+  settingsPage: "agent-pixels-settings-page",
 } as const;
 
 export const EXPORT_NAMES = {
   sidebar: "AgentPixelsSidebarLink",
   page: "AgentPixelsCameraPage",
+  settingsPage: "AgentPixelsSettingsPage",
 } as const;
 
 const manifest: PaperclipPluginManifestV1 = {
@@ -22,7 +24,13 @@ const manifest: PaperclipPluginManifestV1 = {
   description: "Security camera style pixel office view for Paperclip companies.",
   author: "Garratt Campton",
   categories: ["ui"],
-  capabilities: ["companies.read", "agents.read", "ui.sidebar.register", "ui.page.register"],
+  capabilities: [
+    "companies.read",
+    "agents.read",
+    "instance.settings.register",
+    "ui.sidebar.register",
+    "ui.page.register",
+  ],
   entrypoints: {
     worker: "./dist/worker.js",
     ui: "./dist/ui",
@@ -41,6 +49,12 @@ const manifest: PaperclipPluginManifestV1 = {
         displayName: "Agent Pixels",
         exportName: EXPORT_NAMES.page,
         routePath: PAGE_ROUTE,
+      },
+      {
+        type: "settingsPage",
+        id: SLOT_IDS.settingsPage,
+        displayName: "Agent Pixels Settings",
+        exportName: EXPORT_NAMES.settingsPage,
       },
     ],
   },

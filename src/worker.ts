@@ -34,6 +34,20 @@ const plugin = definePlugin({
         })),
       };
     });
+
+    ctx.data.register("character-settings", async (params) => {
+      const companyId = typeof params.companyId === "string" ? params.companyId : null;
+      const agents = companyId ? await ctx.agents.list({ companyId, limit: 100, offset: 0 }) : [];
+
+      return {
+        agents: agents.map((agent) => ({
+          id: agent.id,
+          name: agent.name,
+          status: agent.status,
+          urlKey: agent.urlKey,
+        })),
+      };
+    });
   },
 
   async onHealth() {

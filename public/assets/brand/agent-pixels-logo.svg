@@ -1,0 +1,20 @@
+<svg width="640" height="160" viewBox="0 0 640 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Pixels</title>
+  <desc id="desc">Pixel camera logo mark for Agent Pixels</desc>
+  <rect width="640" height="160" rx="0" fill="#0f172a"/>
+  <rect x="20" y="20" width="120" height="120" fill="#111827" stroke="#38bdf8" stroke-width="6"/>
+  <rect x="38" y="46" width="84" height="56" fill="#1e293b" stroke="#e5e7eb" stroke-width="6"/>
+  <rect x="58" y="62" width="44" height="24" fill="#22c55e"/>
+  <rect x="70" y="70" width="20" height="8" fill="#bbf7d0"/>
+  <rect x="50" y="108" width="60" height="10" fill="#38bdf8"/>
+  <rect x="28" y="28" width="18" height="18" fill="#fbbf24"/>
+  <rect x="116" y="28" width="14" height="14" fill="#f43f5e"/>
+  <path d="M164 50H184V70H204V90H184V110H164V50Z" fill="#38bdf8"/>
+  <text x="220" y="74" fill="#f8fafc" font-family="Arial Black, Arial, sans-serif" font-size="46" font-weight="900">Agent</text>
+  <text x="220" y="122" fill="#38bdf8" font-family="Arial Black, Arial, sans-serif" font-size="46" font-weight="900">Pixels</text>
+  <rect x="520" y="42" width="18" height="18" fill="#22c55e"/>
+  <rect x="550" y="42" width="18" height="18" fill="#fbbf24"/>
+  <rect x="580" y="42" width="18" height="18" fill="#f43f5e"/>
+  <rect x="520" y="72" width="78" height="10" fill="#334155"/>
+  <rect x="520" y="96" width="54" height="10" fill="#334155"/>
+</svg>

@@ -10,7 +10,7 @@ type CharacterDirectionSprites = {
   right: SpriteData[];
 };
 
-type AssetIndex = {
+export type AssetIndex = {
   characters: string[];
   floors: string[];
   walls: string[];
@@ -245,7 +245,7 @@ function recolorLayout(layout: OfficeLayout, floorColor: NonNullable<OfficeLayou
   };
 }
 
-function getPluginAssetBaseUrl(): string {
+export function getPluginAssetBaseUrl(): string {
   const metaUrl = import.meta.url;
   if (metaUrl && !metaUrl.startsWith("blob:")) {
     return new URL("./assets/", metaUrl).toString();
