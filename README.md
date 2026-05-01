@@ -69,6 +69,10 @@ Planned company packs include:
 
 More company types are being explored. These packs are intended for people who want a ready-to-run Paperclip company with agents, roles, workflows, and a visual office already set up.
 
+## Support
+
+For feature requests, bugs, or help using Agent Pixels, visit [agent-pixels.com/support](https://www.agent-pixels.com/support).
+
 ## What's Next
 
 Planned improvements include:
