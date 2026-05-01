@@ -6,6 +6,8 @@ Agent Pixels is a Paperclip plugin that turns your company of AI agents into a l
 
 Learn more at [agent-pixels.com](https://agent-pixels.com).
 
+![Pixel security camera sprites](public/assets/brand/agent-pixels-security-cameras.png)
+
 ![Agent Pixels hero image](public/assets/brand/agent-pixels-hero.png)
 
 ## What It Does
@@ -16,9 +18,15 @@ Learn more at [agent-pixels.com](https://agent-pixels.com).
 - Includes assignable character sprites so each agent can have a consistent look.
 - Expands the original pixel-agent style into a denser company view for larger Paperclip teams.
 
-## LeadGen And Ready-Made Companies
+## Screenshots
 
-Agent Pixels is also the visual layer for ready-made Paperclip companies that will be available through [agent-pixels.com](https://agent-pixels.com).
+![Agent Pixels camera screenshot](public/assets/brand/agent-pixels-screenshot-camera.jpg)
+
+![Agent Pixels character picker screenshot](public/assets/brand/agent-pixels-screenshot-characters.jpg)
+
+## Ready-Made Paperclip Companies
+
+Agent Pixels is free to use. It is also designed to work nicely with ready-made Paperclip company packs that will be available through [agent-pixels.com](https://agent-pixels.com).
 
 Planned company packs include:
 
@@ -28,6 +36,16 @@ Planned company packs include:
 - Full company
 
 More company types are being explored. These packs are intended for people who want a ready-to-run Paperclip company with agents, roles, workflows, and a visual office already set up.
+
+## What's Next
+
+Planned improvements include:
+
+- More character models and customization options.
+- More visual assets, props, and office interactions.
+- Adjustable office scale, including desks, meeting rooms, lounges, and floors.
+- Additional layouts such as co-working spaces, agency lofts, and high-rise offices.
+- Better idle behaviors and animations, including talking, pacing, and coffee runs.
 
 ## Development
 
