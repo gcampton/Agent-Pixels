@@ -22,29 +22,98 @@ Learn more at [agent-pixels.com](https://agent-pixels.com).
 
 ![Agent Pixels character picker screenshot](public/assets/brand/agent-pixels-screenshot-characters.jpg)
 
-## Development
+## Install
 
-Paperclip should be running before installing or testing the plugin locally. The plugin needs the Paperclip host to load the worker, serve the UI bundle, and expose the plugin bridge.
+### Prerequisites
 
-Install dependencies:
+- Node.js
+- pnpm
+- Paperclip running
+
+Paperclip must be running before installing or testing the plugin. The plugin needs the Paperclip host to load the worker, serve the UI bundle, and expose the plugin bridge.
+
+If you installed Paperclip from npm and do not have the Paperclip source code locally, use a prebuilt Agent Pixels release when available. Building from source currently requires the Paperclip repo because the plugin SDK is not published separately.
+
+Clone and build Agent Pixels:
 
 ```bash
+git clone https://github.com/gcampton/Agent-Pixels
+cd Agent-Pixels
 pnpm install
-```
-
-Typecheck:
-
-```bash
-pnpm run typecheck
-```
-
-Build:
-
-```bash
 pnpm run build
 ```
 
 The build output is written to `dist/`.
+
+If your Paperclip source is somewhere else, set the SDK path when building. This path should point to the built Paperclip plugin SDK:
+
+```bash
+PAPERCLIP_SDK_DIST=/path/to/paperclip/packages/plugins/sdk/dist pnpm run build
+```
+
+Then install the plugin in Paperclip using the local path to this repo.
+
+## Development
+
+Run checks before opening a pull request:
+
+```bash
+pnpm run typecheck
+pnpm run build
+```
+
+### Self-Hosted Docker Install
+
+For self-hosted Paperclip, clone Agent Pixels into a folder that is visible inside the Paperclip container. The install API must receive the container path, not the host path.
+
+Example host path:
+
+```bash
+git clone https://github.com/gcampton/Agent-Pixels /volume4/docker/paperclip/plugins/agent-pixels
+```
+
+Example container path:
+
+```text
+/paperclip/plugins/agent-pixels
+```
+
+Agent Pixels currently builds against the Paperclip plugin SDK from the Paperclip monorepo. Build `@paperclipai/shared` and `@paperclipai/plugin-sdk` from the Paperclip source first:
+
+```bash
+cd /path/to/paperclip/packages/shared
+npm install
+npx tsc --noEmitOnError false
+
+cd /path/to/paperclip/packages/plugins/sdk
+npm install
+npx tsc --noEmitOnError false
+```
+
+Then build Agent Pixels. If the plugin is not cloned under the Paperclip repo, set `PAPERCLIP_SDK_DIST`:
+
+```bash
+cd /path/to/Agent-Pixels
+npm install
+PAPERCLIP_SDK_DIST=/path/to/paperclip/packages/plugins/sdk/dist npm run build
+```
+
+In authenticated Paperclip deployments, create a CLI auth challenge and approve it as an instance admin:
+
+```bash
+curl -s -X POST http://<your-paperclip-host>/api/cli-auth/challenges \
+  -H "Content-Type: application/json" \
+  -d '{"requestedAccess":"instance_admin_required","command":"plugin install"}'
+```
+
+Open the returned `approvalUrl`, approve the request, then install using the returned `boardApiToken`:
+
+```bash
+curl -s -X POST http://<your-paperclip-host>/api/plugins/install \
+  -H "Authorization: Bearer <boardApiToken>" \
+  -H "Content-Type: application/json" \
+  -d '{"packageName":"/paperclip/plugins/agent-pixels","isLocalPath":true}'
+```
 
 ## Assets
 
