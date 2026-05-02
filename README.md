@@ -34,6 +34,12 @@ Paperclip must be running before installing or testing the plugin. The plugin ne
 
 If you installed Paperclip from npm and do not have the Paperclip source code locally, use a prebuilt Agent Pixels release when available. Building from source currently requires the Paperclip repo because the plugin SDK is not published separately.
 
+To be more specific, make sure you:
+
+```bash
+git clone https://github.com/paperclipai/paperclip
+```
+
 Clone and build Agent Pixels:
 
 ```bash
