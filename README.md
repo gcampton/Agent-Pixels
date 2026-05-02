@@ -56,6 +56,40 @@ public/assets/characters/
 
 Add new sprites as `char_81.png`, `char_82.png`, etc. The build script auto-detects `char_*.png` files and adds them to the plugin asset index.
 
+### Asset Dimensions
+
+Agent Pixels uses a 16px tile grid.
+
+| Asset type | Location | Size |
+| --- | --- | --- |
+| Character sprite sheet | `public/assets/characters/char_*.png` | `112x96` PNG |
+| Character frame | inside each character sheet | `16x32` |
+| Character sheet layout | inside each character sheet | `7` columns x `3` rows |
+| Floor tile | `public/assets/floors/floor_*.png` | `16x16` |
+| Wall tile sheet | `public/assets/walls/wall_0.png` | `64x128` |
+| Furniture sprites | `public/assets/furniture/**` | Multiples of `16px` |
+| Office layout | `public/assets/default-layout-1.json` | `21x22` tiles (`336x352px`) |
+| Boardroom/kitchen layout | `public/assets/agent-pixels-layout-boardroom-kitchen.json` | `22x15` tiles (`352x240px`) |
+| Combined camera map | generated in the UI | `68x22` tiles (`1088x352px`) |
+
+Character sheets use three direction rows: front, back, and side. The opposite side direction is mirrored by the renderer.
+
+Common furniture sizes currently in use:
+
+| Asset | Size |
+| --- | --- |
+| Desk front | `48x32` |
+| Desk side | `16x64` |
+| PC sprites | `16x32` |
+| Wooden/cushioned chairs | `16x32` or `16x16` |
+| Sofa front/back | `32x16` |
+| Sofa side | `16x32` |
+| Boardroom table | `48x80` |
+| Pool table | `80x48` |
+| Arcade machine | `32x48` |
+| Paintings/whiteboard | `16x32` or `32x32` |
+| Plants | `16x32` or `32x48` |
+
 ## Ready-Made Paperclip Companies
 
 Agent Pixels is free to use. It is also designed to work nicely with ready-made Paperclip company packs that will be available through [agent-pixels.com](https://agent-pixels.com).
