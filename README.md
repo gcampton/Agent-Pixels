@@ -24,15 +24,52 @@ Learn more at [agent-pixels.com](https://agent-pixels.com).
 
 ## Install
 
-### Prerequisites
+### Release Version
+
+Use the release version if you just want to install Agent Pixels. The release ZIP already contains the built plugin files, so you do not need the Paperclip source code or plugin SDK locally.
+
+Prerequisites:
+
+- Paperclip running
+- The latest `agent-pixels-*.zip` release file
+
+Download the latest `agent-pixels-*.zip` from the GitHub Releases page, then unzip it into your Paperclip plugins folder:
+
+```text
+~/.paperclip/plugins/
+```
+
+After unzipping, you should have a folder like this:
+
+```text
+agent-pixels-0.1.0/
+  package.json
+  README.md
+  dist/
+    manifest.js
+    worker.js
+    ui/
+```
+
+For Docker installs, unzip the release into a bind-mounted folder and install the path as seen from inside the container, for example:
+
+```text
+/paperclip/plugins/agent-pixels-0.1.0
+```
+
+### Development Version
+
+Use the development version if you want to edit Agent Pixels or build it from source.
+
+Prerequisites:
 
 - Node.js
 - pnpm
 - Paperclip running
+- Paperclip source code cloned locally
+- Built Paperclip plugin SDK
 
-Paperclip must be running before installing or testing the plugin. The plugin needs the Paperclip host to load the worker, serve the UI bundle, and expose the plugin bridge.
-
-If you installed Paperclip from npm and do not have the Paperclip source code locally, use a prebuilt Agent Pixels release when available. Building from source currently requires the Paperclip repo because the plugin SDK is not published separately.
+If you installed Paperclip from npm and do not have the Paperclip source code locally, use the release version instead. Building from source currently requires the Paperclip repo because the plugin SDK is not published separately.
 
 To be more specific, make sure you:
 
@@ -58,6 +95,14 @@ PAPERCLIP_SDK_DIST=/path/to/paperclip/packages/plugins/sdk/dist pnpm run build
 ```
 
 Then install the plugin in Paperclip using the local path to this repo.
+
+To create a release ZIP after building:
+
+```bash
+pnpm run package:release
+```
+
+This requires the `zip` command-line tool. The ZIP is written to `release/`.
 
 ## Development
 
@@ -167,20 +212,20 @@ Common furniture sizes currently in use:
 
 ## Ready-Made Paperclip Companies
 
-Agent Pixels is free to use. It is also designed to work nicely with ready-made Paperclip company packs that will be available through [agent-pixels.com](https://agent-pixels.com).
+Agent Pixels is free to use. It is also designed to work nicely with ready-made Paperclip company packs that are available at [agent-pixels.com](https://agent-pixels.com).
 
-Planned company packs include:
+Paperclip company packs include:
 
 - SEO agency
 - Game dev agency
 - SaaS company
 - Full company
 
-More company types are being explored. These packs are intended for people who want a ready-to-run Paperclip company with agents, roles, workflows, and a visual office already set up.
+More company types are being explored. Agent Pixel Company packs are built from Garratt's personal agents developed over many months. Agents come with a Task Router Engine and extensive reference files to grep. Scraped from high quality web data, these make whatever AI you use on par with pretrained AI LLMs without having to do the work. For example, the Copywriter comes with over 7 reference files to grep and 6 different task files for the right job.
 
 ## Support
 
-For feature requests, bugs, or help using Agent Pixels, visit [agent-pixels.com/support](https://www.agent-pixels.com/support).
+For feature requests, bugs, or help using Agent Pixels, please submit a ticket at [agent-pixels.com/support](https://www.agent-pixels.com/support).
 
 ## What's Next
 

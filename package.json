@@ -12,6 +12,7 @@
   "scripts": {
     "build": "node build.mjs",
     "clean": "rm -rf dist",
+    "package:release": "node scripts/package-release.mjs",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
