@@ -153,6 +153,7 @@ function combineLayouts(office: OfficeLayout, boardroomKitchen: OfficeLayout): {
   copyLayout(overflowOffice, overflowOffsetCol, 0);
 
   const hallRow = Math.floor(rows / 2);
+  const spawnTile = { col: office.cols - 1, row: hallRow };
   function drawHall(startCol: number, endCol: number) {
     for (let row = hallRow - 1; row <= hallRow + 1; row++) {
       for (let col = startCol; col <= endCol; col++) {
@@ -173,6 +174,7 @@ function combineLayouts(office: OfficeLayout, boardroomKitchen: OfficeLayout): {
 
   drawHall(office.cols - 2, boardOffsetCol + 1);
   drawHall(boardOffsetCol + boardroomKitchen.cols - 2, overflowOffsetCol + 1);
+  tileColors[spawnTile.row * cols + spawnTile.col] = { h: 204, s: 10, b: -42, c: -32 };
 
   for (let row = hallRow - 2; row <= hallRow + 2; row++) {
     for (const col of [
@@ -197,6 +199,7 @@ function combineLayouts(office: OfficeLayout, boardroomKitchen: OfficeLayout): {
       layoutRevision: 1,
       tiles,
       tileColors,
+      spawnTile,
       furniture: [
         ...office.furniture.map((item) => ({ ...item, uid: `camera1-${item.uid}` })),
         ...boardroomKitchen.furniture.map((item) => ({

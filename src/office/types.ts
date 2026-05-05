@@ -121,6 +121,8 @@ export interface OfficeLayout {
   rows: number;
   tiles: TileType[];
   furniture: PlacedFurniture[];
+  /** Optional shared tile where characters enter the office on initial load. */
+  spawnTile?: { col: number; row: number };
   /** Per-tile color settings, parallel to tiles array. null = wall/no color */
   tileColors?: Array<ColorValue | null>;
   /** Bumped when the bundled default layout changes; forces a reset on existing installs */

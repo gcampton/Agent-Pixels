@@ -153,6 +153,29 @@ export class OfficeState {
     ch.moveProgress = 0;
   }
 
+  private getSpawnTile(): { col: number; row: number } {
+    const spawn = this.layout.spawnTile;
+    if (spawn && isWalkable(spawn.col, spawn.row, this.tileMap, this.blockedTiles)) {
+      return spawn;
+    }
+    return this.walkableTiles[0] ?? { col: 1, row: 1 };
+  }
+
+  private moveCharacterToSpawn(ch: Character): void {
+    const spawn = this.getSpawnTile();
+    ch.tileCol = spawn.col;
+    ch.tileRow = spawn.row;
+    ch.x = spawn.col * TILE_SIZE + TILE_SIZE / 2;
+    ch.y = spawn.row * TILE_SIZE + TILE_SIZE / 2;
+    ch.path = [];
+    ch.moveProgress = 0;
+    ch.state = CharacterState.IDLE;
+    ch.dir = Direction.DOWN;
+    ch.frame = 0;
+    ch.frameTimer = 0;
+    ch.wanderTimer = Math.random() * 3;
+  }
+
   getLayout(): OfficeLayout {
     return this.layout;
   }
@@ -298,17 +321,10 @@ export class OfficeState {
       const seat = this.seats.get(seatId)!;
       seat.assigned = true;
       ch = createCharacter(id, palette, seatId, seat, hueShift);
+      this.moveCharacterToSpawn(ch);
     } else {
-      // No seats — spawn at random walkable tile
-      const spawn =
-        this.walkableTiles.length > 0
-          ? this.walkableTiles[Math.floor(Math.random() * this.walkableTiles.length)]
-          : { col: 1, row: 1 };
       ch = createCharacter(id, palette, null, null, hueShift);
-      ch.x = spawn.col * TILE_SIZE + TILE_SIZE / 2;
-      ch.y = spawn.row * TILE_SIZE + TILE_SIZE / 2;
-      ch.tileCol = spawn.col;
-      ch.tileRow = spawn.row;
+      this.moveCharacterToSpawn(ch);
     }
 
     if (folderName) {
