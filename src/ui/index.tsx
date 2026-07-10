@@ -256,21 +256,20 @@ function useCharacterAssets() {
 
   useEffect(() => {
     let cancelled = false;
-    const baseUrl = getPluginAssetBaseUrl();
-    fetch(`${baseUrl}agent-pixels-assets.json`)
-      .then((res) => {
+    (async () => {
+      try {
+        const baseUrl = await getPluginAssetBaseUrl();
+        const res = await fetch(`${baseUrl}agent-pixels-assets.json`);
         if (!res.ok) throw new Error(`Failed to fetch character index: ${res.status}`);
-        return res.json() as Promise<AssetIndex>;
-      })
-      .then((index) => {
+        const index = (await res.json()) as AssetIndex;
         if (cancelled) return;
         setAssets(index.characters.map((path, index) => ({ index, path, url: `${baseUrl}${path}` })));
         setError(null);
-      })
-      .catch((nextError: unknown) => {
+      } catch (nextError: unknown) {
         if (cancelled) return;
         setError(nextError instanceof Error ? nextError.message : String(nextError));
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };

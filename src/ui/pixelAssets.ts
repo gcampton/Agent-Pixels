@@ -3,6 +3,7 @@ import { buildDynamicCatalog } from "../office/layout/furnitureCatalog.js";
 import { setCharacterTemplates } from "../office/sprites/spriteData.js";
 import type { OfficeLayout, SpriteData, TileType } from "../office/types.js";
 import { setWallSprites } from "../office/wallTiles.js";
+import { PLUGIN_ID } from "../manifest.js";
 
 type CharacterDirectionSprites = {
   down: SpriteData[];
@@ -248,16 +249,43 @@ function recolorLayout(layout: OfficeLayout, floorColor: NonNullable<OfficeLayou
   };
 }
 
-export function getPluginAssetBaseUrl(): string {
-  const metaUrl = import.meta.url;
-  if (metaUrl && !metaUrl.startsWith("blob:")) {
-    return new URL("./assets/", metaUrl).toString();
+type PluginUiContribution = {
+  pluginId: string;
+  pluginKey: string;
+};
+
+let assetBaseUrlPromise: Promise<string> | null = null;
+
+async function resolveAssetBaseUrlFromUiContributions(): Promise<string | null> {
+  try {
+    const res = await fetch("/api/plugins/ui-contributions");
+    if (!res.ok) return null;
+    const contributions = (await res.json()) as PluginUiContribution[];
+    const plugin = contributions.find((entry) => entry.pluginKey === PLUGIN_ID);
+    if (!plugin?.pluginId) return null;
+    return `/_plugins/${plugin.pluginId}/ui/assets/`;
+  } catch {
+    return null;
   }
+}
 
-  const pluginMatch = window.location.pathname.match(/\/_plugins\/[^/]+\/ui\//);
-  if (pluginMatch) return `${pluginMatch[0]}assets/`;
+export function getPluginAssetBaseUrl(): Promise<string> {
+  assetBaseUrlPromise ??= (async () => {
+    const metaUrl = import.meta.url;
+    if (metaUrl && !metaUrl.startsWith("blob:")) {
+      return new URL("./assets/", metaUrl).toString();
+    }
 
-  return "/_plugins/agent-pixels.camera/ui/assets/";
+    const resolvedByUuid = await resolveAssetBaseUrlFromUiContributions();
+    if (resolvedByUuid) return resolvedByUuid;
+
+    const pluginMatch = window.location.pathname.match(/\/_plugins\/[^/]+\/ui\//);
+    if (pluginMatch) return `${pluginMatch[0]}assets/`;
+
+    return "/_plugins/agent-pixels.camera/ui/assets/";
+  })();
+
+  return assetBaseUrlPromise;
 }
 
 function rgbaToHex(r: number, g: number, b: number, a: number): string {
@@ -337,11 +365,19 @@ async function decodeFurniture(baseUrl: string, index: AssetIndex): Promise<Reco
   return Object.fromEntries(entries);
 }
 
+async function fetchLayout(url: string): Promise<OfficeLayout> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
+  return trimLayoutToVisibleRoom((await res.json()) as OfficeLayout);
+}
+
 export function loadPixelAssets(): Promise<LoadedPixelAssets> {
   loadPromise ??= (async () => {
-    const baseUrl = getPluginAssetBaseUrl();
+    const baseUrl = await getPluginAssetBaseUrl();
     const indexUrl = `${baseUrl}agent-pixels-assets.json`;
-    const index = (await fetch(indexUrl).then((res) => res.json())) as AssetIndex;
+    const indexRes = await fetch(indexUrl);
+    if (!indexRes.ok) throw new Error(`Failed to fetch ${indexUrl}: ${indexRes.status}`);
+    const index = (await indexRes.json()) as AssetIndex;
 
     const layoutPaths = index.layouts ?? {
       office: index.defaultLayout,
@@ -353,12 +389,8 @@ export function loadPixelAssets(): Promise<LoadedPixelAssets> {
       decodeFloors(baseUrl, index),
       decodeWalls(baseUrl, index),
       decodeFurniture(baseUrl, index),
-      fetch(`${baseUrl}${layoutPaths.office}`)
-        .then((res) => res.json())
-        .then(trimLayoutToVisibleRoom) as Promise<OfficeLayout>,
-      fetch(`${baseUrl}${layoutPaths.boardroomKitchen}`)
-        .then((res) => res.json())
-        .then(trimLayoutToVisibleRoom) as Promise<OfficeLayout>,
+      fetchLayout(`${baseUrl}${layoutPaths.office}`),
+      fetchLayout(`${baseUrl}${layoutPaths.boardroomKitchen}`),
     ]);
 
     setCharacterTemplates(characters);
