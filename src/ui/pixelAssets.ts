@@ -3,6 +3,8 @@ import { buildDynamicCatalog } from "../office/layout/furnitureCatalog.js";
 import { setCharacterTemplates } from "../office/sprites/spriteData.js";
 import type { OfficeLayout, SpriteData, TileType } from "../office/types.js";
 import { setWallSprites } from "../office/wallTiles.js";
+import { PLUGIN_ID } from "../manifest.js";
+import { assetBaseFromModuleUrl, assetBaseFromPluginList } from "./assetBase.js";
 
 type CharacterDirectionSprites = {
   down: SpriteData[];
@@ -248,16 +250,23 @@ function recolorLayout(layout: OfficeLayout, floorColor: NonNullable<OfficeLayou
   };
 }
 
-export function getPluginAssetBaseUrl(): string {
-  const metaUrl = import.meta.url;
-  if (metaUrl && !metaUrl.startsWith("blob:")) {
-    return new URL("./assets/", metaUrl).toString();
-  }
+let baseUrlPromise: Promise<string> | null = null;
 
-  const pluginMatch = window.location.pathname.match(/\/_plugins\/[^/]+\/ui\//);
-  if (pluginMatch) return `${pluginMatch[0]}assets/`;
+export function getPluginAssetBaseUrl(): Promise<string> {
+  const direct = assetBaseFromModuleUrl(import.meta.url, window.location.pathname);
+  if (direct) return Promise.resolve(direct);
 
-  return "/_plugins/agent-pixels.camera/ui/assets/";
+  baseUrlPromise ??= fetch("/api/plugins", { credentials: "include" })
+    .then((res) => {
+      if (!res.ok) throw new Error(`Failed to list plugins: ${res.status}`);
+      return res.json();
+    })
+    .then((body) => assetBaseFromPluginList(body, PLUGIN_ID))
+    .catch((error) => {
+      baseUrlPromise = null;
+      throw error;
+    });
+  return baseUrlPromise;
 }
 
 function rgbaToHex(r: number, g: number, b: number, a: number): string {
@@ -339,7 +348,7 @@ async function decodeFurniture(baseUrl: string, index: AssetIndex): Promise<Reco
 
 export function loadPixelAssets(): Promise<LoadedPixelAssets> {
   loadPromise ??= (async () => {
-    const baseUrl = getPluginAssetBaseUrl();
+    const baseUrl = await getPluginAssetBaseUrl();
     const indexUrl = `${baseUrl}agent-pixels-assets.json`;
     const index = (await fetch(indexUrl).then((res) => res.json())) as AssetIndex;
 

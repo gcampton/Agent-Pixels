@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useHostContext, usePluginData, type PluginSettingsPageProps, type PluginSidebarProps } from "@paperclipai/plugin-sdk/ui";
 import { PAGE_ROUTE } from "../manifest.js";
 import { PixelOfficeCanvas } from "./PixelOfficeCanvas.js";
+import { characterAssetsFromIndex } from "./assetBase.js";
 import { getPluginAssetBaseUrl, type AssetIndex } from "./pixelAssets.js";
 
 type CameraRoomData = {
@@ -256,15 +257,19 @@ function useCharacterAssets() {
 
   useEffect(() => {
     let cancelled = false;
-    const baseUrl = getPluginAssetBaseUrl();
-    fetch(`${baseUrl}agent-pixels-assets.json`)
+    let baseUrl = "";
+    getPluginAssetBaseUrl()
+      .then((resolved) => {
+        baseUrl = resolved;
+        return fetch(`${baseUrl}agent-pixels-assets.json`);
+      })
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch character index: ${res.status}`);
         return res.json() as Promise<AssetIndex>;
       })
       .then((index) => {
         if (cancelled) return;
-        setAssets(index.characters.map((path, index) => ({ index, path, url: `${baseUrl}${path}` })));
+        setAssets(characterAssetsFromIndex(baseUrl, index.characters));
         setError(null);
       })
       .catch((nextError: unknown) => {
