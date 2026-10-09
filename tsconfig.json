@@ -17,5 +17,6 @@
       "@paperclipai/plugin-sdk/ui": ["/home/garratt/dev/4_repos/paperclip/packages/plugins/sdk/dist/ui/index.d.ts"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/**/__tests__"]
 }
